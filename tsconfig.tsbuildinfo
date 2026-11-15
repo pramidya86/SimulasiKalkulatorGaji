@@ -1,1 +1,1 @@
-{"root":["./src/app.tsx","./src/calculation.test.ts","./src/calculation.ts","./src/main.tsx","./src/master.ts","./vite.config.ts"],"version":"5.9.3"}
+{"root":["./src/app.tsx","./src/calculation.test.ts","./src/calculation.ts","./src/main.tsx","./src/master.ts","./vite.config.ts","./vite-env.d.ts"],"version":"5.9.3"}
