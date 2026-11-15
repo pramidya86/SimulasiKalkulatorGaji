@@ -44,7 +44,30 @@ export default function App() {
                     <h3 className="section-heading">Perbandingan Komponen</h3><div className="comparison"><table><thead><tr><th>Komponen</th><th>Saat ini</th><th>Setelah kenaikan</th><th>Selisih</th></tr></thead><tbody><tr><td>Gaji Pokok</td><td>{formatRupiah(result.gajiSaatIni)}</td><td>{formatRupiah(result.gajiBaru)}</td><td>+{formatRupiah((result.gajiBaru)-(result.gajiSaatIni))}</td></tr><tr><td>Tunjangan Posisi</td><td>{formatRupiah(result.tunjanganSaatIni)}</td><td>{formatRupiah(result.tunjanganBaru)}</td><td>+{formatRupiah((result.tunjanganBaru)-(result.tunjanganSaatIni))}</td></tr><tr className="total-row"><td>Total dua komponen</td><td>{formatRupiah(result.totalSaatIni)}</td><td>{formatRupiah(result.totalBaru)}</td><td>+{formatRupiah(result.selisihTotal)}</td></tr></tbody></table></div>
                     <div className="notice success"><CircleCheck size={18} />{result.alasan}</div>
                     {result.rating === 'PR5' && <div className="notice muted"><Info size={18} />PR5 memiliki kenaikan matriks 0%, tetapi penyesuaian ke minimum grade baru tetap berlaku.</div>}
-                    <details className="details"><summary>Lihat detail perhitungan <ChevronDown size={18} /></summary><div className="details-inner"><DetailRow label="Midpoint grade saat ini" value={formatRupiah(result.midpointSaatIni)} /><DetailRow label="Comparatio" value={formatPercent(result.comparatio)} /><DetailRow label="Kelompok comparatio" value={result.bucketLabel} /><DetailRow label="Kenaikan sesuai matriks" value={formatPercent(result.persenMatriks)} /><DetailRow label="Nominal kenaikan matriks" value={formatRupiah(result.kenaikanMatriks)} /><DetailRow label="Gaji sebelum penyesuaian" value={formatRupiah(result.gajiSebelumPenyesuaian)} /><DetailRow label="Rentang grade baru" value={`${formatRupiah(gradeInfo(result.gradeBaru).minimum)} – ${formatRupiah(gradeInfo(result.gradeBaru).maximum)}`} /><DetailRow label="Gaji pokok final" value={formatRupiah(result.gajiBaru)} /><DetailRow label="Selisih gaji pokok" value={formatRupiah(result.selisihGaji)} /><DetailRow label="Kenaikan gaji pokok efektif" value={formatPercent(result.persenEfektif)} /><DetailRow label="Selisih tunjangan posisi" value={formatRupiah(result.selisihTunjangan)} /><DetailRow label="Selisih total dua komponen" value={formatRupiah(result.selisihTotal)} /><DetailRow label="Kenaikan total dua komponen" value={formatPercent(result.persenTotal)} /></div></details>
+                    <details className="details"><summary>Lihat Detail Perhitungan Lengkap <ChevronDown size={18} /></summary><div className="details-inner">
+                        {/* Detail disesuaikan dengan data Simulation yang tersedia pada App(2).tsx. */}
+                        <DetailRow label="Grade saat ini" value={result.gradeSaatIni} />
+                        <DetailRow label="Grade setelah kenaikan" value={result.gradeBaru} />
+                        <DetailRow label="Performance Rating" value={result.rating} />
+                        <DetailRow label="Gaji pokok saat ini" value={formatRupiah(result.gajiSaatIni)} />
+                        <DetailRow label="Tunjangan Posisi saat ini" value={formatRupiah(result.tunjanganSaatIni)} />
+                        <DetailRow label="Total Gaji Pokok + Tunjangan Posisi saat ini" value={formatRupiah(result.totalSaatIni)} />
+                        <DetailRow label="Midpoint grade saat ini" value={formatRupiah(result.midpointSaatIni)} />
+                        <DetailRow label="Comparatio" value={formatPercent(result.comparatio)} />
+                        <DetailRow label="Kelompok comparatio" value={result.bucketLabel} />
+                        <DetailRow label="Kenaikan Sesuai Matriks" value={formatPercent(result.persenMatriks)} />
+                        <DetailRow label="Nominal kenaikan matriks" value={formatRupiah(result.kenaikanMatriks)} />
+                        <DetailRow label="Gaji sebelum penyesuaian" value={formatRupiah(result.gajiSebelumPenyesuaian)} />
+                        <DetailRow label="Rentang grade baru" value={`${formatRupiah(gradeInfo(result.gradeBaru).minimum)} – ${formatRupiah(gradeInfo(result.gradeBaru).maximum)}`} />
+                        <DetailRow label="Gaji Pokok baru (final)" value={formatRupiah(result.gajiBaru)} />
+                        <DetailRow label="Selisih gaji pokok" value={formatRupiah(result.selisihGaji)} />
+                        <DetailRow label="Kenaikan Gaji Pokok Efektif" value={formatPercent(result.persenEfektif)} />
+                        <DetailRow label="Tunjangan Posisi baru" value={formatRupiah(result.tunjanganBaru)} />
+                        <DetailRow label="Selisih tunjangan posisi" value={formatRupiah(result.selisihTunjangan)} />
+                        <DetailRow label="Total Gaji Pokok + Tunjangan Posisi baru" value={formatRupiah(result.totalBaru)} />
+                        <DetailRow label="Selisih total dua komponen" value={formatRupiah(result.selisihTotal)} />
+                        <DetailRow label="Kenaikan total dua komponen" value={formatPercent(result.persenTotal)} />
+                    </div></details>
                 </> : <div className="empty-state" aria-live="polite"><div className="empty-icon"><Calculator size={39} /></div><h3>{dirty ? 'Simulasi perlu diperbarui' : 'Belum ada hasil simulasi'}</h3><p>{dirty ? 'Data berubah. Klik Hitung Simulasi untuk memperbarui hasil.' : 'Lengkapi data Anda untuk melihat estimasi kenaikan gaji.'}</p><div className="placeholder-bars"><span /><span /><span /></div></div>}
                 <div className="disclaimer"><Info size={19} /><p>Hasil simulasi bersifat estimasi dan bukan persetujuan kenaikan gaji. Total yang ditampilkan hanya mencakup gaji pokok dan tunjangan posisi, sebelum pajak serta potongan lainnya.</p></div>
             </div></section></div><footer>HCMD ©️2026</footer></div></main>
