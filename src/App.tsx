@@ -8,7 +8,7 @@ function ReadonlyField({ id, label, value, icon: Icon, help }: { id: string, lab
 function DetailRow({ label, value }: { label: string, value: string }) { return <div className="detail-row"><span>{label}</span><strong>{value}</strong></div> }
 export default function App() {
     const [grade, setGrade] = useState<Grade | ''>(''); const [rating, setRating] = useState<Rating | ''>(''); const [salary, setSalary] = useState('');
-    const [result, setResult] = useState<Simulation | null>(null); const [dirty, setDirty] = useState(false); const [error, setError] = useState('');
+    const [result, setResult] = useState<Simulation | null>(null); const [dirty, setDirty] = useState(false); const [error, setError] = useState(''); const [detailExpanded, setDetailExpanded] = useState(false);
     const upcoming = grade ? nextGrade(grade) : null; const top = grade === '5B'; const parsed = parseRupiah(salary);
     function change() { if (result) { setDirty(true); setResult(null); } setError(''); }
     function handleGrade(v: string) { change(); setGrade(v as Grade | ''); } function handleRating(v: string) { change(); setRating(v as Rating | ''); }
@@ -44,31 +44,42 @@ export default function App() {
                     <h3 className="section-heading">Perbandingan Komponen</h3><div className="comparison"><table><thead><tr><th>Komponen</th><th>Saat ini</th><th>Setelah kenaikan</th><th>Selisih</th></tr></thead><tbody><tr><td>Gaji Pokok</td><td>{formatRupiah(result.gajiSaatIni)}</td><td>{formatRupiah(result.gajiBaru)}</td><td>+{formatRupiah((result.gajiBaru)-(result.gajiSaatIni))}</td></tr><tr><td>Tunjangan Posisi</td><td>{formatRupiah(result.tunjanganSaatIni)}</td><td>{formatRupiah(result.tunjanganBaru)}</td><td>+{formatRupiah((result.tunjanganBaru)-(result.tunjanganSaatIni))}</td></tr><tr className="total-row"><td>Total dua komponen</td><td>{formatRupiah(result.totalSaatIni)}</td><td>{formatRupiah(result.totalBaru)}</td><td>+{formatRupiah(result.selisihTotal)}</td></tr></tbody></table></div>
                     <div className="notice success"><CircleCheck size={18} />{result.alasan}</div>
                     {result.rating === 'PR5' && <div className="notice muted"><Info size={18} />PR5 memiliki kenaikan matriks 0%, tetapi penyesuaian ke minimum grade baru tetap berlaku.</div>}
-                    <details className="details"><summary>Lihat Detail Perhitungan Lengkap <ChevronDown size={18} /></summary><div className="details-inner">
-                        {/* Detail disesuaikan dengan data Simulation yang tersedia pada App(2).tsx. */}
-                        <DetailRow label="Grade saat ini" value={result.gradeSaatIni} />
-                        <DetailRow label="Grade setelah kenaikan" value={result.gradeBaru} />
-                        <DetailRow label="Performance Rating" value={result.rating} />
-                        <DetailRow label="Gaji pokok saat ini" value={formatRupiah(result.gajiSaatIni)} />
-                        <DetailRow label="Tunjangan Posisi saat ini" value={formatRupiah(result.tunjanganSaatIni)} />
-                        <DetailRow label="Total Gaji Pokok + Tunjangan Posisi saat ini" value={formatRupiah(result.totalSaatIni)} />
-                        <DetailRow label="Midpoint grade saat ini" value={formatRupiah(result.midpointSaatIni)} />
-                        <DetailRow label="Comparatio" value={formatPercent(result.comparatio)} />
-                        <DetailRow label="Kelompok comparatio" value={result.bucketLabel} />
-                        <DetailRow label="Kenaikan Sesuai Matriks" value={formatPercent(result.persenMatriks)} />
-                        <DetailRow label="Nominal kenaikan matriks" value={formatRupiah(result.kenaikanMatriks)} />
-                        <DetailRow label="Gaji sebelum penyesuaian" value={formatRupiah(result.gajiSebelumPenyesuaian)} />
-                        <DetailRow label="Rentang grade baru" value={`${formatRupiah(gradeInfo(result.gradeBaru).minimum)} – ${formatRupiah(gradeInfo(result.gradeBaru).maximum)}`} />
-                        <DetailRow label="Gaji Pokok baru (final)" value={formatRupiah(result.gajiBaru)} />
-                        <DetailRow label="Selisih gaji pokok" value={formatRupiah(result.selisihGaji)} />
-                        <DetailRow label="Kenaikan Gaji Pokok Efektif" value={formatPercent(result.persenEfektif)} />
-                        <DetailRow label="Tunjangan Posisi baru" value={formatRupiah(result.tunjanganBaru)} />
-                        <DetailRow label="Selisih tunjangan posisi" value={formatRupiah(result.selisihTunjangan)} />
-                        <DetailRow label="Total Gaji Pokok + Tunjangan Posisi baru" value={formatRupiah(result.totalBaru)} />
-                        <DetailRow label="Selisih total dua komponen" value={formatRupiah(result.selisihTotal)} />
-                        <DetailRow label="Kenaikan total dua komponen" value={formatPercent(result.persenTotal)} />
-                    </div></details>
+                    <details className="details" onToggle={e => setDetailExpanded(e.currentTarget.open)}>
+                        <summary>
+                            <span style={{display:'flex',flexDirection:'column',gap:3,flex:1,minWidth:0}}>
+                                <strong>Lihat Detail Perhitungan Lengkap</strong>
+                                <span style={{fontSize:12,fontWeight:400,opacity:0.75}}>Rincian comparatio, persentase matriks, dan penyesuaian rentang</span>
+                            </span>
+                            <span style={{fontSize:12,fontWeight:600,marginLeft:'auto'}}>{detailExpanded ? 'Sembunyikan' : 'Lihat Detail'}</span>
+                            <ChevronDown size={18} style={{transform:detailExpanded?'rotate(180deg)':undefined,transition:'transform 150ms'}} />
+                        </summary>
+                        <div className="details-inner">
+                            <div style={{display:'flex',alignItems:'center',gap:10,margin:'12px 0',fontWeight:700}}><span style={{background:'#005BAC',color:'#fff',borderRadius:8,padding:'5px 11px'}}>1</span><span>Perhitungan Comparatio &amp; Penentuan Kelompok</span></div>
+                            <DetailRow label="Gaji Pokok Saat Ini" value={formatRupiah(result.gajiSaatIni)} />
+                            <DetailRow label={`Midpoint Grade Saat Ini (${result.gradeSaatIni})`} value={formatRupiah(result.midpointSaatIni)} />
+                            <DetailRow label="Rumus Comparatio" value="(Gaji Pokok ÷ Midpoint) × 100%" />
+                            <div style={{padding:'8px 12px',background:'#F0F7FF',borderRadius:8}}><DetailRow label="Hasil Comparatio" value={formatPercent(result.comparatio)} /><DetailRow label="Kelompok Comparatio" value={result.bucketLabel} /></div>
+
+                            <div style={{display:'flex',alignItems:'center',gap:10,margin:'20px 0 12px',fontWeight:700}}><span style={{background:'#005BAC',color:'#fff',borderRadius:8,padding:'5px 11px'}}>2</span><span>Kenaikan Berdasarkan Matriks ({result.rating})</span></div>
+                            <DetailRow label="Performance Rating" value={result.rating} />
+                            <DetailRow label="Persentase Kenaikan Matriks" value={formatPercent(result.persenMatriks)} />
+                            <DetailRow label="Nominal Kenaikan Matriks" value={formatRupiah(result.kenaikanMatriks)} />
+                            <div style={{padding:'8px 12px',background:'#F0F7FF',borderRadius:8}}><DetailRow label="Gaji Sebelum Penyesuaian Rentang" value={formatRupiah(result.gajiSebelumPenyesuaian)} /></div>
+
+                            <div style={{display:'flex',alignItems:'center',gap:10,margin:'20px 0 12px',fontWeight:700}}><span style={{background:'#005BAC',color:'#fff',borderRadius:8,padding:'5px 11px'}}>3</span><span>Penyesuaian Rentang Grade Baru ({result.gradeBaru})</span></div>
+                            <DetailRow label={`Minimum Grade ${result.gradeBaru}`} value={formatRupiah(gradeInfo(result.gradeBaru).minimum)} />
+                            <DetailRow label={`Maksimum Grade ${result.gradeBaru}`} value={formatRupiah(gradeInfo(result.gradeBaru).maximum)} />
+                            <div style={{marginTop:10,padding:'10px 12px',background:'#F8FAFC',borderRadius:8}}><div style={{fontWeight:700,marginBottom:4}}>Status Penyesuaian:</div><div>{result.gajiSebelumPenyesuaian === result.gajiBaru ? 'Gaji pokok sesuai hasil perhitungan.' : result.alasan}</div></div>
+                            <div style={{padding:'8px 12px',marginTop:8,background:'#F0F7FF',borderRadius:8}}><DetailRow label="Gaji Pokok Baru Final" value={formatRupiah(result.gajiBaru)} /></div>
+
+                            <div style={{display:'flex',alignItems:'center',gap:10,margin:'20px 0 12px',fontWeight:700}}><span style={{background:'#005BAC',color:'#fff',borderRadius:8,padding:'5px 11px'}}>4</span><span>Ringkasan Selisih &amp; Kenaikan Efektif</span></div>
+                            <DetailRow label="Selisih Gaji Pokok" value={`+${formatRupiah(result.selisihGaji)}`} />
+                            <DetailRow label="Kenaikan Gaji Pokok Efektif" value={formatPercent(result.persenEfektif)} />
+                            <DetailRow label="Selisih Tunjangan Posisi" value={`+${formatRupiah(result.selisihTunjangan)}`} />
+                            <div style={{padding:'8px 12px',background:'#F0F7FF',borderRadius:8}}><DetailRow label="Total Selisih (Gaji + Tunjangan)" value={`+${formatRupiah(result.selisihTotal)} (${formatPercent(result.persenTotal)})`} /></div>
+                        </div>
+                    </details>
                 </> : <div className="empty-state" aria-live="polite"><div className="empty-icon"><Calculator size={39} /></div><h3>{dirty ? 'Simulasi perlu diperbarui' : 'Belum ada hasil simulasi'}</h3><p>{dirty ? 'Data berubah. Klik Hitung Simulasi untuk memperbarui hasil.' : 'Lengkapi data Anda untuk melihat estimasi kenaikan gaji.'}</p><div className="placeholder-bars"><span /><span /><span /></div></div>}
-                <div className="disclaimer"><Info size={19} /><p>Hasil simulasi bersifat estimasi dan bukan persetujuan kenaikan gaji. Total yang ditampilkan hanya mencakup gaji pokok dan tunjangan posisi, sebelum pajak serta potongan lainnya.</p></div>
+                <div className="disclaimer"><Info size={19} /><p><strong>Catatan:</strong> Hasil simulasi bersifat estimasi dan bukan keputusan kenaikan gaji. Perhitungan berdasarkan Range Gaji Pokok, Tunjangan Posisi dan Comparatio sesuai PT 3-B1 Tentang Fasilitas dan Satuan Nilai.</p></div>
             </div></section></div><footer>HCMD ©️2026</footer></div></main>
 }
