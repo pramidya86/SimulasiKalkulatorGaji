@@ -93,5 +93,5 @@ export default function App() {
                     </details>
                 </> : <div className="empty-state" aria-live="polite"><div className="empty-icon"><Calculator size={39} /></div><h3>{dirty ? 'Simulasi perlu diperbarui' : 'Belum ada hasil simulasi'}</h3><p>{dirty ? 'Data berubah. Klik Hitung Simulasi untuk memperbarui hasil.' : 'Lengkapi data Anda untuk melihat estimasi kenaikan gaji.'}</p><div className="placeholder-bars"><span /><span /><span /></div></div>}
                 
-            </div></section></div><footer>created by Febrianto & Amrullah</footer></div></main>
+            </div></section></div><footer>©️ 2026 Created by Febrianto & Amrullah</footer></div></main>
 }
