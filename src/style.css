@@ -205,6 +205,17 @@ h1 {
     overflow: hidden
 }
 
+.money-input input:focus,
+.money-input input:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.money-input:focus-within {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 .money-input span {
     color: none;
     padding-left: 12px;

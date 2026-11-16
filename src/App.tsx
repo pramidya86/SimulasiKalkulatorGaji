@@ -87,7 +87,7 @@ export default function App() {
                             <DetailRow label="Selisih Gaji Pokok" value={`+${formatRupiah(result.selisihGaji)}`} />
                             <DetailRow label="Kenaikan Gaji Pokok Efektif" value={formatPercent(result.persenEfektif)} />
                             <DetailRow label="Selisih Tunjangan Posisi" value={`+${formatRupiah(result.selisihTunjangan)}`} />
-                            <div style={{padding:'8px 12px',background:'#F0F7FF',borderRadius:8}}><DetailRow label="Total Selisih (Gaji + Tunjangan)" value={`+${formatRupiah(result.selisihTotal)} (${formatPercent(result.persenTotal)})`} /></div>
+                            <div style={{padding:'8px 12px',background:'#F0F7FF',borderRadius:8}}><DetailRow label="Total Selisih (Gaji Pokok + Tunjangan Posisi)" value={`+${formatRupiah(result.selisihTotal)} (${formatPercent(result.persenTotal)})`} /></div>
                         </div>
                         <div className="disclaimer"><Info size={19} /><p><strong>Catatan:</strong> Hasil simulasi bersifat estimasi dan bukan keputusan kenaikan gaji. Perhitungan berdasarkan Range Gaji Pokok, Tunjangan Posisi dan Comparatio sesuai PT 3-B1 Tentang Fasilitas dan Satuan Nilai.</p></div>
                     </details>
